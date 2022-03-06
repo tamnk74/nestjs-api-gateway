@@ -6,11 +6,11 @@ on:
 env:
   ENV_TAG: ${{ secrets.ENV_TAG }}
   REGISTRY: ghcr.io
-  IMAGE_NAME: nestjs_api_gateway
+  IMAGE_NAME: nestjs-api-gateway
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: gke-deploy-cluster
   GKE_ZONE: asia-east1-a
-  DEPLOYMENT_NAME: nestjs_api_gateway
+  DEPLOYMENT_NAME: nestjs-api-gateway
 
 jobs:
   build-image:
@@ -40,7 +40,7 @@ jobs:
         with:
           context: .
           push: true
-          tags:  ghcr.io/tomnk/nestjs_api_gateway/${{ env.IMAGE_NAME }}:latest
+          tags:  ghcr.io/tamnk74/nestjs-api-gateway/${{ env.IMAGE_NAME }}:latest
       # Build the Docker image
       # - name: Build
       #   run: |-

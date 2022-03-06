@@ -1,0 +1,60 @@
+name: Deployment on Push, Change
+
+on:
+  push:
+    branches: [develop, main]
+
+jobs:
+  build:
+    uses: ./.github/workflows/ci.yaml
+
+  # sonarqube-analysis:
+  #   name: SonarQube Analysis
+  #   runs-on: [self-hosted]
+  #   needs: [build]
+
+  #   steps:
+  #     - name: Setup sonar scanner
+  #       uses: warchant/setup-sonar-scanner@v3
+  #       env:
+  #         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: coverage
+  #         path: coverage
+  #     - name: Sonar Scanner
+  #       run: |
+  #         sonar-scanner -Dsonar.projectBaseDir=$(pwd) \
+  #           -Dproject.settings=sonar.properties \
+  #           -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+  #           -Dsonar.projectName=$SONAR_PROJECT_KEY \
+  #           -Dsonar.exclusions=**/node_modules/**/*,**/migrations/**/*,**/misc/**/*,**/webserver/**/*,**/*.spec.ts,**/cli/**/* \
+  #           -Dsonar.coverage.exclusions=**/test/**/* \
+  #           -Dsonar.sources=src \
+  #           -Dsonar.language=ts \
+  #           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+  #           -Dsonar.branch.name=$GITHUB_HEAD_REF \
+  #           -Dsonar.login=$SONAR_LOGIN \
+  #           -Dsonar.host.url=$SONAR_URL
+  #       env:
+  #         SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+  #         SONAR_URL: ${{ secrets.SONAR_URL }}
+  #         SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
+  # deploy:
+  #   uses: ./.github/workflows/cd.yaml
+  #   needs: [sonarqube-analysis]
+  #   with:
+  #     env_tag: development
+  #     environment: Development
+  #   secrets:
+  #     DOCKER_IMAGE_REPOSITORY: ${{ secrets.DOCKER_IMAGE_REPOSITORY }}
+  #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  #     DEPLOYMENT_FILE: ${{ secrets.DEPLOYMENT_FILE}}
+  #     KUBE_CA: ${{ secrets.KUBE_CA }}
+  #     KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+  #     KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+  #     KUBE_SERVER: ${{ secrets.KUBE_SERVER}}
+  #     GCP_STORAGE_KEY: ${{ secrets.GCP_STORAGE_KEY}}

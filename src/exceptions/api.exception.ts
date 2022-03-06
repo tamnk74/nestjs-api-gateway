@@ -9,7 +9,7 @@ type ErrorProps = {
 };
 
 export class ApiException extends HttpException {
-  private code: string;
+  public code: string;
   public override message: string;
   public override stack?: string;
 

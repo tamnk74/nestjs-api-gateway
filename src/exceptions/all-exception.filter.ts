@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { FastifyReply } from 'fastify';
 
 import { ApiException } from './api.exception';
+import { GrpcException } from './grpc.exception';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -34,7 +35,20 @@ export class AllExceptionFilter implements ExceptionFilter {
       });
       return;
     }
-    console.error(exception);
+
+    if ((exception as { details: string }).details === 'RpcException') {
+      const grpcException = exception as GrpcException;
+      const metadata = grpcException.metadata;
+      const status = (metadata?.get('STATUS')[0] as string) || '500';
+      const code = (metadata?.get('CODE')[0] as string) || 'ERR-500';
+      const message = metadata?.get('MESSAGE')[0] as string;
+      response.status(+status).send({
+        status: status,
+        code: code ?? `ERR-${status}`,
+        message: message,
+      });
+      return;
+    }
 
     response.status(500).send(
       new ApiException({

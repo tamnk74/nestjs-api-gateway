@@ -14,7 +14,7 @@ import { LoginDto } from '../dtos/requests/login.dto';
 import { AuthService } from '../services';
 
 @Controller()
-export class UserController {
+export class AuthController {
   constructor(
     private authService: AuthService,
     private jwtService: JwtService,
@@ -26,7 +26,7 @@ export class UserController {
     const user = await this.authService.validateUser(loginDto);
     const payload = { id: user.id, name: user.name, email: user.email };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 

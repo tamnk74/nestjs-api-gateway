@@ -1,0 +1,47 @@
+name: Pull Request
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/ci.yaml
+
+  # sonarqube-analysis:
+  #   name: SonarQube Analysis
+  #   runs-on: [self-hosted]
+  #   needs: [build]
+
+  #   steps:
+  #     - name: Setup sonar scanner
+  #       uses: warchant/setup-sonar-scanner@v3
+  #       env:
+  #         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: coverage
+  #         path: coverage
+  #     - name: Sonar Scaner
+  #       run: |
+  #         sonar-scanner -Dsonar.projectBaseDir=$(pwd) \
+  #           -Dproject.settings=sonar.properties \
+  #           -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+  #           -Dsonar.projectName=$SONAR_PROJECT_KEY \
+  #           -Dsonar.exclusions=**/node_modules/**/*,**/migrations/**/*,**/misc/**/*,**/webserver/**/*,**/*.spec.ts,**/cli/**/* \
+  #           -Dsonar.coverage.exclusions=**/test/**/* \
+  #           -Dsonar.sources=src \
+  #           -Dsonar.language=ts \
+  #           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+  #           -Dsonar.pullrequest.key=$PULL_REQUEST_KEY \
+  #           -Dsonar.pullrequest.branch=$GITHUB_HEAD_REF \
+  #           -Dsonar.pullrequest.base=$GITHUB_BASE_REF \
+  #           -Dsonar.qualitygate.wait=true \
+  #           -Dsonar.login=$SONAR_LOGIN \
+  #           -Dsonar.host.url=$SONAR_URL \
+  #       env:
+  #         PULL_REQUEST_KEY: ${{ github.event.number }}
+  #         SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+  #         SONAR_URL: ${{ secrets.SONAR_URL }}
+  #         SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}

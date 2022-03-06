@@ -3,25 +3,14 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { AuthService } from './services/auth.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
 import { join } from 'path';
-import { UserController } from './controllers/auth.controller';
 import { JwtStrategy } from './strategies';
+import { AuthController, UserController } from './controllers';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'USER_PACKAGE',
-        transport: Transport.GRPC,
-        options: {
-          package: 'user',
-          protoPath: [join(__dirname, './protos/user.proto')],
-          url: '0.0.0.0:5000',
-        },
-      },
-    ]),
     JwtModule.registerAsync({
       useFactory: async (config: ConfigService) => ({
         secret: config.get('JWT_SECRET_KEY'),
@@ -32,7 +21,26 @@ import { JwtStrategy } from './strategies';
     HttpModule,
     ConfigModule,
   ],
-  controllers: [UserController],
-  providers: [AuthService, JwtStrategy],
+  controllers: [UserController, AuthController],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    {
+      provide: 'USER_PACKAGE',
+      useFactory: (configService: ConfigService) =>
+        ClientProxyFactory.create({
+          transport: Transport.GRPC,
+          options: {
+            package: 'user',
+            protoPath: [join(__dirname, './protos/user.proto')],
+            url: configService.get('USER_SERVICE_URL'),
+            loader: {
+              defaults: true,
+            },
+          },
+        }),
+      inject: [ConfigService],
+    },
+  ],
 })
 export class AuthModule {}

@@ -38,6 +38,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   app.useGlobalFilters(new AllExceptionFilter(configService));
-  await app.listen(configService.get<string>('PORT', '3000'), '0.0.0.0');
+  await app.listen(configService.get<string>('PORT', '8000'), '0.0.0.0');
 }
+
 bootstrap();

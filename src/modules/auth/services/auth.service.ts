@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { UserService } from '../dtos/interfaces/user.service';
+import { UserService } from './user.service';
 import { LoginDto } from '../dtos/requests/login.dto';
 import * as bcrypt from 'bcrypt';
 import { User } from '../dtos/responses';

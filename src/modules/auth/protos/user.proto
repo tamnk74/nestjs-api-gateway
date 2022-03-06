@@ -5,6 +5,7 @@ package user;
 service UserService {
   rpc FindOne (UserById) returns (User) {}
   rpc FindUserByEmail (UserByEmail) returns (User) {}
+  rpc registerUser (RegisterUser) returns (User) {}
 }
 
 message UserById {
@@ -13,6 +14,12 @@ message UserById {
 
 message UserByEmail {
   string email = 1;
+}
+
+message RegisterUser {
+  string name = 1;
+  string email = 2;
+  string password = 3;
 }
 
 message User {
