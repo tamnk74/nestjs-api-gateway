@@ -29,7 +29,7 @@
     "cli:error": "ts-node -r tsconfig-paths/register ./src/cli/ export"
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "4.1.0",
+    "@google-cloud/logging-winston": "5.0.0",
     "@nestjs/axios": "0.0.1",
     "@nestjs/common": "8.0.1",
     "@nestjs/config": "1.0.1",
